@@ -28,8 +28,12 @@ Alternatively, you can simply drop everything `~/.vim/` directory.
 ### Configuration
 
 User data can be configured via `pastebin#config()`.
-For use with `pastebin.com`, you could add the following to your `.vimrc`:
+The function `g:InstallPasterConfig` will be called automatically when the autoload file is loaded.
+So, for use with `pastebin.com`, you could add the following to your `.vimrc`:
 
-    call pastebin#config('pastebin.com', { 'api_dev_key': '4ca886bc1ac78c4d20d8cb0864a0b0c8' })
+    function! g:InstallPasterConfig()
+        call pastebin#config('pastebin.com', { 'api_dev_key': '4ca886bc1ac78c4d20d8cb0864a0b0c8' })
+    endfunction
+
 
 Of course, you'd have to substitute your personal key as handed out by the site.

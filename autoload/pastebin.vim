@@ -1,5 +1,3 @@
-
-
 "----------------------------------------
 " static variables
 "----------------------------------------
@@ -22,6 +20,11 @@ function! pastebin#config(server, ...)
     endif
     return s:config[a:server]
 endfunction
+
+if exists("*g:InstallPasterConfig")
+    call g:InstallPasterConfig()
+endif
+
 
 
 function! pastebin#paste(server, text)
