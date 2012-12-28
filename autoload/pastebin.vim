@@ -21,7 +21,7 @@ function! pastebin#config(server, ...)
     return s:config[a:server]
 endfunction
 
-if exists("*g:InstallPasterConfig")
+if exists('*g:InstallPasterConfig')
     call g:InstallPasterConfig()
 endif
 
@@ -65,18 +65,36 @@ endfunction
 " utility functions
 "----------------------------------------
 
-function! s:UrlEncode(str)
-    return substitute(substitute(a:str,"[\001-\037%&?=\\\\]",'\="%".printf("%02X",char2nr(submatch(0)))','g'),' ','%20','g')
-endfunction
-
 function! s:HttpRequest(url, post)
     let l:command = s:httpCLC
     for [l:key, l:value] in items(a:post)
-        let l:command .= ' --data-urlencode ' . shellescape(s:UrlEncode(l:key).'='.s:UrlEncode(l:value))
+        " type(...) == string:
+        if type(l:value) == 1
+            let l:data_urlencode = l:key.'='.l:value
+        " type(...) == list:
+        elseif type(l:value) == 3
+            let [l:type, l:data] = l:value
+            if l:type == 'text'
+                let l:data_urlencode = l:key.'='.l:data
+            elseif l:type == 'file'
+                let l:data_urlencode = l:key.'@'.l:data
+            elseif l:type == 'input'
+                let l:data_urlencode = l:key.'@-'
+                let l:input = l:data
+            endif
+        endif
+        if exists('l:data_urlencode')
+            let l:command .= ' --data-urlencode ' . shellescape(l:data_urlencode)
+            unlet l:data_urlencode
+        endif
+        unlet l:value
     endfor
     let l:command .= ' ' . shellescape(a:url)
-    " return l:command
-    return system(l:command)
+    if exists('l:input')
+        return system(l:command, l:input)
+    else
+        return system(l:command)
+    endif
 endfunction
 
 
@@ -91,7 +109,7 @@ function! s:StandardHttpParams(title, content, format) dict
 
     " fill in paste
     let l:post[self['map']['title']]   = a:title
-    let l:post[self['map']['content']] = a:content
+    let l:post[self['map']['content']] = ['input', a:content]
     if a:format != ''
         let l:post[self['map']['format']]  = a:format
     endif
@@ -106,9 +124,10 @@ function! s:StandardHttpParams(title, content, format) dict
 
     " remove empty values
     for [l:key, l:value] in items(l:post)
-        if l:value == ''
+        if empty(l:value)
             call remove(l:post, l:key)
         endif
+        unlet l:value
     endfor
     return l:post
 endfunction
