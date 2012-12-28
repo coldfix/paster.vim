@@ -72,7 +72,7 @@ endfunction
 function! s:HttpRequest(url, post)
     let l:command = s:httpCLC
     for [l:key, l:value] in items(a:post)
-        let l:command .= ' -d' . shellescape(s:UrlEncode(l:key).'='.s:UrlEncode(l:value))
+        let l:command .= ' --data-urlencode ' . shellescape(s:UrlEncode(l:key).'='.s:UrlEncode(l:value))
     endfor
     let l:command .= ' ' . shellescape(a:url)
     " return l:command
