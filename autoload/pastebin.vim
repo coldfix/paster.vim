@@ -68,11 +68,9 @@ endfunction
 function! s:HttpRequest(url, post)
     let l:command = s:httpCLC
     for [l:key, l:value] in items(a:post)
-        " type(...) == string:
-        if type(l:value) == 1
+        if type(l:value) == type('')
             let l:data_urlencode = l:key.'='.l:value
-        " type(...) == list:
-        elseif type(l:value) == 3
+        elseif type(l:value) == type([])
             let [l:type, l:data] = l:value
             if l:type == 'text'
                 let l:data_urlencode = l:key.'='.l:data
