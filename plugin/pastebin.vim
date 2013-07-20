@@ -20,16 +20,19 @@ function! s:PastePlugin(mode) range
         let l:text = s:GetTextRange(getpos("'<")[1:2], getpos("'>")[1:2])
     elseif a:mode ==# ''
         let l:text = s:GetTextBlock()
+    elseif a:mode ==# 'a'
+        let l:text = join(getline(1, '$'), "\n")
     else
         let l:text = join(getline(a:firstline, a:lastline), "\n")
     endif
     call pastebin#paste('\.\*', l:text)
 endfunction
 
+map <silent> <Plug>aPastebin :call <SID>PastePlugin('a')<CR>
 map <silent> <Plug>nPastebin :call <SID>PastePlugin(mode())<cr>
 map <silent> <Plug>vPastebin :call <SID>PastePlugin(visualmode())<cr>
 
-nmap <S-F8> <Plug>nPastebin
+nmap <S-F8> <Plug>aPastebin
 vmap <S-F8> <Plug>vPastebin
 
 
