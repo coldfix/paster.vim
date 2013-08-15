@@ -19,8 +19,10 @@ It behaves differently depending on the current mode:
 
 You can install this plugin using [vim-pathogen](https://github.com/tpope/vim-pathogen/):
 
-    cd ~/.vim/bundle
-    git clone git://github.com/thomas-glaessle/vim-blockcomment.git
+```bash
+cd ~/.vim/bundle
+git clone ssh://git@github.com/coldfix/paster.vim
+```
 
 Alternatively, you can simply drop everything `~/.vim/` directory.
 
@@ -31,9 +33,10 @@ User data can be configured via `pastebin#config()`.
 The function `g:InstallPasterConfig` will be called automatically when the autoload file is loaded.
 So, for use with `pastebin.com`, you could add the following to your `.vimrc`:
 
-    function! g:InstallPasterConfig()
-        call pastebin#config('pastebin.com', { 'api_dev_key': '4ca886bc1ac78c4d20d8cb0864a0b0c8' })
-    endfunction
-
+```vim
+function! g:InstallPasterConfig()
+    call pastebin#config('pastebin.com', { 'api_dev_key': '4ca886bc1ac78c4d20d8cb0864a0b0c8' })
+endfunction
+```
 
 Of course, you'd have to substitute your personal key as handed out by the site.
