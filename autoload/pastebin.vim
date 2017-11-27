@@ -132,7 +132,7 @@ endfunction
 
 function! s:StandardParseResponse(response) dict
     for l:line in split(a:response, "\n")
-        let l:location = matchstr(l:line, 'http://.\{-}\ze\s*$')
+        let l:location = matchstr(l:line, '^\s*\zshttps\?://.\{-}\ze\s*$')
         if l:location != ""
             return l:location
         endif
